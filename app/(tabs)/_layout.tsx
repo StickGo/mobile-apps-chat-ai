@@ -1,35 +1,71 @@
+import { Theme } from '@/constants/theme';
+import { useAppTheme } from '@/context/ThemeContext';
 import { Tabs } from 'expo-router';
+import { MessageSquare, User } from 'lucide-react-native';
 import React from 'react';
-
-import { HapticTab } from '@/components/haptic-tab';
-import { IconSymbol } from '@/components/ui/icon-symbol';
-import { Colors } from '@/constants/theme';
-import { useColorScheme } from '@/hooks/use-color-scheme';
+import { Platform, StyleSheet, View } from 'react-native';
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
+  const { mode } = useAppTheme();
+  const theme = Theme[mode];
 
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+        tabBarActiveTintColor: theme.text,
+        tabBarInactiveTintColor: theme.secondaryText,
         headerShown: false,
-        tabBarButton: HapticTab,
+        tabBarStyle: [
+          styles.tabBar,
+          { 
+            backgroundColor: theme.background,
+            borderTopColor: theme.secondaryBackground,
+          }
+        ],
+        tabBarLabelStyle: styles.label,
       }}>
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
+          title: 'Chat',
+          tabBarIcon: ({ color, focused }) => (
+            <View style={styles.iconWrapper}>
+              <MessageSquare size={24} color={color} strokeWidth={focused ? 2.5 : 2} />
+            </View>
+          ),
         }}
       />
       <Tabs.Screen
-        name="explore"
+        name="profile"
         options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+          title: 'Profile',
+          tabBarIcon: ({ color, focused }) => (
+            <View style={styles.iconWrapper}>
+              <User size={24} color={color} strokeWidth={focused ? 2.5 : 2} />
+            </View>
+          ),
         }}
       />
     </Tabs>
   );
 }
+
+const styles = StyleSheet.create({
+  tabBar: {
+    height: Platform.OS === 'ios' ? 88 : 65,
+    borderTopWidth: 1,
+    elevation: 0,
+    backgroundColor: '#FFFFFF',
+  },
+  iconWrapper: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 30,
+    width: 30,
+  },
+  label: {
+    fontSize: 10,
+    fontWeight: '600',
+    marginBottom: Platform.OS === 'ios' ? 0 : 8,
+  },
+});

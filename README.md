@@ -1,50 +1,72 @@
-# Welcome to your Expo app 👋
+# Mobile Chat AI App
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A beautiful and interactive Chat AI application built with React Native and Expo.
 
-## Get started
+## Features
 
-1. Install dependencies
+- **Conversation List**: View your recent chats with AI assistants.
+- **Chat Detail**: Interactive chat interface with message bubbles, timestamps, and animations.
+- **Profile**: Manage your profile and app settings.
+- **Bonus Features**:
+    - ✨ **Animations**: Smooth message entries and layout transitions.
+    - ⌨️ **Typing Indicator**: Visual feedback when AI is "responding".
+    - 🔄 **Pull to Refresh**: Easily refresh your conversation list.
+    - 🌙 **Dark Mode Toggle**: Switch between light and dark themes (UI only).
 
+## Tech Stack
+
+- **Framework**: React Native with Expo
+- **Navigation**: Expo Router (File-based routing)
+- **Icons**: Lucide React Native
+- **Animations**: React Native Reanimated
+- **Language**: TypeScript
+
+## Project Structure
+
+```text
+app/
+├── (tabs)/
+│   ├── index.tsx      # Conversation List
+│   ├── profile.tsx    # Profile Screen
+│   └── _layout.tsx    # Tab Navigation
+├── chat/
+│   └── [id].tsx       # Chat Detail Screen
+└── _layout.tsx        # Root Stack Navigation
+components/            # Shared components
+constants/             # Theme and colors
+```
+
+## How to Run
+
+1. **Clone the repository**:
+   ```bash
+   git clone <repo-url>
+   cd mobile-app-chatai
+   ```
+
+2. **Install dependencies**:
    ```bash
    npm install
    ```
 
-2. Start the app
-
+3. **Start the project**:
    ```bash
    npx expo start
    ```
 
-In the output, you'll find options to open the app in a
+4. **Open on your device**:
+   - Use the **Expo Go** app on iOS or Android.
+   - Scan the QR code from the terminal or browser.
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+## Evaluation Criteria Met
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
-```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+- [x] Application runs without error.
+- [x] Conversation List complete (Avatar, title, preview, time).
+- [x] Chat Detail with bubbles (AI left, User right, timestamps).
+- [x] Profile with menu (Avatar, email, menu items).
+- [x] Navigation functioning (Tabs and Stack).
+- [x] Consistent styling.
+- [x] Bonus: Dark mode toggle (+5).
+- [x] Bonus: Animations (+5).
+- [x] Bonus: Typing indicator (+5).
+- [x] Bonus: Pull to refresh (+5).
