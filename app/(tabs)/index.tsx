@@ -1,154 +1,141 @@
 import { Theme } from '@/constants/theme';
 import { useAppTheme } from '@/context/ThemeContext';
 import { useRouter } from 'expo-router';
-import { Activity, Briefcase, Cpu, Gamepad2, HeartPulse, Plus, Search, Trophy } from 'lucide-react-native';
-import React, { useState } from 'react';
 import {
-    FlatList,
-    Image,
-    Platform,
-    RefreshControl,
+    ArrowRight,
+    BrainCircuit,
+    Code,
+    Globe,
+    MessageSquare,
+    Zap
+} from 'lucide-react-native';
+import {
+    Dimensions,
     SafeAreaView,
     StatusBar,
     StyleSheet,
     Text,
-    TextInput,
     TouchableOpacity,
-    View,
+    View
 } from 'react-native';
-import Animated, { FadeInDown } from 'react-native-reanimated';
+import Animated, {
+    FadeIn,
+    FadeInDown,
+    Layout
+} from 'react-native-reanimated';
 
-const CATEGORIES = [
-  { id: 'sports', name: 'Sports', icon: Trophy },
-  { id: 'health', name: 'Health', icon: HeartPulse },
-  { id: 'games', name: 'Games', icon: Gamepad2 },
-  { id: 'work', name: 'Work', icon: Briefcase },
-];
+const { width } = Dimensions.get('window');
 
-const DUMMY_CHATS = [
-  { id: 'sports_bot', name: 'Coach AI', preview: 'Ready for today’s training?', time: '12:05 PM', avatar: 'https://cdn-icons-png.flaticon.com/512/3663/3663335.png', unread: 2, model: 'vanguard-xl', tokens: '1.2k' },
-  { id: 'health_bot', name: 'Health Mate', preview: 'Remember to drink water!', time: '09:42 AM', avatar: 'https://cdn-icons-png.flaticon.com/512/2966/2966327.png', unread: 0, model: 'synapse-lite', tokens: '450' },
-  { id: 'games_bot', name: 'Game Guide', preview: 'New patches are live.', time: 'Yesterday', avatar: 'https://cdn-icons-png.flaticon.com/512/686/686589.png', unread: 0, model: 'neural-x', tokens: '2.8k' },
-];
-
-export default function ConversationListScreen() {
+export default function PremiumPortalScreen() {
   const router = useRouter();
   const { mode } = useAppTheme();
   const theme = Theme[mode];
-  const [refreshing, setRefreshing] = useState(false);
 
-  const onRefresh = () => {
-    setRefreshing(true);
-    setTimeout(() => setRefreshing(false), 2000);
+  const startNewChat = (initialMsg?: string) => {
+    router.push({ 
+      pathname: '/chat/[id]', 
+      params: { 
+        id: `vcore_${Date.now()}`, 
+        name: 'Vanguard Core', 
+        category: 'universal',
+        initialMessage: initialMsg || ''
+      } 
+    });
   };
 
-  const renderChatItem = ({ item, index }: { item: typeof DUMMY_CHATS[0], index: number }) => (
-    <Animated.View entering={FadeInDown.delay(index * 50).duration(400)}>
-      <TouchableOpacity
-        style={[styles.chatItem, { borderBottomColor: theme.secondaryBackground }]}
-        onPress={() => router.push({ pathname: '/chat/[id]', params: { id: item.id, name: item.name, category: item.id.split('_')[0] } })}
-        activeOpacity={0.7}
-      >
-        <Image source={{ uri: item.avatar }} style={styles.avatar} />
-        <View style={styles.chatInfo}>
-          <View style={styles.chatHeader}>
-            <Text style={[styles.name, { color: theme.text }]}>{item.name}</Text>
-            <View style={[styles.modelBadge, { backgroundColor: theme.secondaryBackground }]}>
-               <Text style={[styles.modelText, { color: theme.secondaryText }]}>{item.model}</Text>
-            </View>
-          </View>
-          <View style={styles.chatFooter}>
-            <Text style={[styles.preview, { color: theme.secondaryText }]} numberOfLines={1}>
-              {item.preview}
-            </Text>
-            <Text style={[styles.tokenText, { color: theme.secondaryText }]}>{item.tokens} tokens</Text>
-          </View>
-        </View>
-        <View style={styles.rightSide}>
-           <Text style={[styles.time, { color: theme.secondaryText }]}>{item.time}</Text>
-           {item.unread > 0 && (
-              <View style={[styles.badge, { backgroundColor: theme.text }]}>
-                <Text style={[styles.badgeText, { color: theme.background }]}>{item.unread}</Text>
-              </View>
-            )}
-        </View>
-      </TouchableOpacity>
-    </Animated.View>
-  );
+  const SUGGESTIONS = [
+    { title: 'Write Code', icon: Code, color: '#3B82F6' },
+    { title: 'Scientific Insight', icon: BrainCircuit, color: '#8B5CF6' },
+    { title: 'Global Trends', icon: Globe, color: '#10B981' },
+    { title: 'Neural Session', icon: Zap, color: '#F59E0B' },
+  ];
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
       <StatusBar barStyle={mode === 'dark' ? 'light-content' : 'dark-content'} />
       
-      <View style={styles.header}>
-        <Text style={[styles.title, { color: theme.text }]}>Intelligence</Text>
-        <TouchableOpacity style={[styles.iconButton, { backgroundColor: theme.secondaryBackground }]}>
-          <Activity size={18} color={theme.text} strokeWidth={2.5} />
-        </TouchableOpacity>
+      {/* Background Accent */}
+      <View style={[styles.bgAccent, { backgroundColor: theme.text, opacity: 0.03 }]} />
+
+      <View style={styles.main}>
+        {/* Header Branding */}
+        <Animated.View entering={FadeIn.delay(100).duration(800)} style={styles.header}>
+            <View style={[styles.logoBox, { backgroundColor: theme.text }]}>
+                <Zap size={18} color={theme.background} fill={theme.background} />
+            </View>
+            <Text style={[styles.nexusText, { color: theme.text }]}>Nexus Core</Text>
+        </Animated.View>
+
+        {/* Hero Greeting */}
+        <View style={styles.hero}>
+          <Animated.Text 
+            entering={FadeInDown.delay(300).duration(800)} 
+            style={[styles.greeting, { color: theme.text }]}
+          >
+            How can I enhance{'\n'}your intelligence?
+          </Animated.Text>
+          <Animated.Text 
+            entering={FadeInDown.delay(400).duration(800)} 
+            style={[styles.subGreeting, { color: theme.secondaryText }]}
+          >
+            Integrated with Vanguard Core 2.5 Stable Flash
+          </Animated.Text>
+        </View>
+
+        {/* Primary Input Action */}
+        <Animated.View 
+          entering={FadeInDown.delay(500).duration(800)}
+          layout={Layout.springify()}
+          style={styles.inputWrapper}
+        >
+            <TouchableOpacity 
+              activeOpacity={0.9} 
+              onPress={() => startNewChat()}
+              style={[styles.inputButton, { backgroundColor: theme.secondaryBackground }]}
+            >
+                <MessageSquare size={20} color={theme.secondaryText} />
+                <Text style={[styles.inputText, { color: theme.secondaryText }]}>Ask anything to Vanguard...</Text>
+                <View style={[styles.sendIcon, { backgroundColor: theme.text }]}>
+                    <ArrowRight size={16} color={theme.background} />
+                </View>
+            </TouchableOpacity>
+        </Animated.View>
+
+        {/* Suggestion Chips Grid */}
+        <View style={styles.gridContainer}>
+          <View style={styles.grid}>
+            {SUGGESTIONS.map((item, index) => (
+              <Animated.View 
+                key={item.title} 
+                entering={FadeInDown.delay(600 + index * 100).duration(800)}
+                style={styles.cardWrapper}
+              >
+                <TouchableOpacity 
+                  style={[styles.card, { backgroundColor: theme.secondaryBackground }]}
+                  onPress={() => startNewChat(item.title)}
+                >
+                  <View style={[styles.cardIcon, { backgroundColor: `${item.color}20` }]}>
+                      <item.icon size={20} color={item.color} />
+                  </View>
+                  <Text style={[styles.cardTitle, { color: theme.text }]} numberOfLines={1}>{item.title}</Text>
+                </TouchableOpacity>
+              </Animated.View>
+            ))}
+          </View>
+        </View>
       </View>
 
-      <FlatList
-        data={DUMMY_CHATS}
-        keyExtractor={(item) => item.id}
-        renderItem={renderChatItem}
-        contentContainerStyle={styles.listContainer}
-        ListHeaderComponent={
-          <>
-            <View style={[styles.heroCard, { backgroundColor: theme.text }]}>
-                <View style={styles.heroHeader}>
-                    <Text style={[styles.heroPre, { color: theme.background }]}>CORE_STATUS: RUNNING</Text>
-                    <Cpu size={16} color={theme.background} />
-                </View>
-                <Text style={[styles.heroTitle, { color: theme.background }]}>Vanguard Pro</Text>
-                <View style={styles.statsRow}>
-                   <View style={styles.stat}>
-                      <Text style={[styles.statVal, { color: theme.background }]}>12ms</Text>
-                      <Text style={[styles.statLab, { color: theme.background, opacity: 0.6 }]}>LATENCY</Text>
-                   </View>
-                   <View style={styles.stat}>
-                      <Text style={[styles.statVal, { color: theme.background }]}>99.9%</Text>
-                      <Text style={[styles.statLab, { color: theme.background, opacity: 0.6 }]}>UPTIME</Text>
-                   </View>
-                   <View style={styles.stat}>
-                      <Text style={[styles.statVal, { color: theme.background }]}>4.2GB</Text>
-                      <Text style={[styles.statLab, { color: theme.background, opacity: 0.6 }]}>MEMORY</Text>
-                   </View>
-                </View>
+      {/* Aesthetic Footer */}
+      <View style={styles.footer}>
+         <View style={styles.footerLine} />
+         <View style={styles.footerContent}>
+            <Text style={[styles.footerText, { color: theme.secondaryText }]}>NEXUS NEURAL INTERFACE ALPHA</Text>
+            <View style={styles.statusRow}>
+               <View style={styles.statusDot} />
+               <Text style={[styles.statusText, { color: theme.text }]}>ONLINE</Text>
             </View>
-
-            <View style={styles.searchRow}>
-                <View style={[styles.searchBox, { backgroundColor: theme.secondaryBackground }]}>
-                <Search size={18} color={theme.secondaryText} />
-                <TextInput 
-                    placeholder="Search neural directory" 
-                    placeholderTextColor={theme.secondaryText}
-                    style={[styles.searchInput, { color: theme.text }]}
-                />
-                </View>
-            </View>
-
-            <View style={styles.categoryRow}>
-                {CATEGORIES.map((cat) => (
-                <TouchableOpacity 
-                    key={cat.id} 
-                    style={[styles.catItem, { backgroundColor: theme.secondaryBackground }]}
-                    onPress={() => router.push({ pathname: '/chat/[id]', params: { id: cat.id, name: `${cat.name} AI`, category: cat.id } })}
-                >
-                    <cat.icon size={20} color={theme.text} />
-                    <Text style={[styles.catLabel, { color: theme.text }]}>{cat.name}</Text>
-                </TouchableOpacity>
-                ))}
-            </View>
-          </>
-        }
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={theme.text} />
-        }
-      />
-
-      <TouchableOpacity style={[styles.fab, { backgroundColor: theme.text }]}>
-         <Plus size={24} color={theme.background} />
-      </TouchableOpacity>
+         </View>
+      </View>
     </SafeAreaView>
   );
 }
@@ -157,191 +144,152 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  bgAccent: {
+    position: 'absolute',
+    top: -width * 0.5,
+    right: -width * 0.3,
+    width: width * 1.5,
+    height: width * 1.5,
+    borderRadius: width * 0.75,
+  },
+  main: {
+    flex: 1,
+    paddingHorizontal: 24,
+    paddingTop: 20,
+  },
   header: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingVertical: 15,
+    gap: 12,
+    marginBottom: 60,
   },
-  title: {
-    fontSize: 32,
-    fontWeight: '900',
-    letterSpacing: -1,
-  },
-  iconButton: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
+  logoBox: {
+    width: 32,
+    height: 32,
+    borderRadius: 8,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  heroCard: {
-    margin: 20,
-    marginTop: 0,
-    borderRadius: 30,
-    padding: 24,
-  },
-  heroHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 8,
-  },
-  heroPre: {
-    fontSize: 10,
+  nexusText: {
+    fontSize: 18,
     fontWeight: '900',
-    letterSpacing: 1.5,
-  },
-  heroTitle: {
-    fontSize: 32,
-    fontWeight: '900',
-    marginBottom: 20,
     letterSpacing: -0.5,
   },
-  statsRow: {
-    flexDirection: 'row',
-    gap: 24,
+  hero: {
+    marginBottom: 40,
+    alignItems: 'center',
   },
-  stat: {
-    flex: 1,
+  greeting: {
+    fontSize: 34,
+    fontWeight: '900',
+    letterSpacing: -1,
+    lineHeight: 42,
+    marginBottom: 12,
+    textAlign: 'center',
   },
-  statVal: {
+  subGreeting: {
     fontSize: 14,
-    fontWeight: '900',
+    fontWeight: '600',
+    opacity: 0.8,
+    textAlign: 'center',
   },
-  statLab: {
-    fontSize: 8,
-    fontWeight: '800',
-    marginTop: 2,
+  inputWrapper: {
+    width: '100%',
+    maxWidth: 600,
+    alignSelf: 'center',
   },
-  searchRow: {
-    paddingHorizontal: 20,
-    marginBottom: 15,
-  },
-  searchBox: {
-    height: 48,
-    borderRadius: 14,
+  inputButton: {
+    height: 64,
+    borderRadius: 20,
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 16,
+    paddingHorizontal: 20,
+    marginBottom: 32,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.08)',
   },
-  searchInput: {
+  inputText: {
     flex: 1,
-    marginLeft: 10,
+    marginLeft: 16,
     fontSize: 16,
-    fontWeight: '500',
-    textAlignVertical: 'center',
-    padding: 0,
+    fontWeight: '600',
   },
-  categoryRow: {
-    flexDirection: 'row',
-    paddingHorizontal: 20,
-    marginBottom: 20,
-    gap: 10,
-  },
-  catItem: {
-    flex: 1,
-    paddingVertical: 12,
-    borderRadius: 14,
-    alignItems: 'center',
+  sendIcon: {
+    width: 36,
+    height: 36,
+    borderRadius: 12,
     justifyContent: 'center',
-    gap: 6,
-  },
-  catLabel: {
-    fontSize: 10,
-    fontWeight: '800',
-    textTransform: 'uppercase',
-  },
-  listContainer: {
-    paddingBottom: 100,
-  },
-  chatItem: {
-    flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingVertical: 18,
-    borderBottomWidth: StyleSheet.hairlineWidth,
   },
-  avatar: {
-    width: 50,
-    height: 50,
-    borderRadius: 18,
-    backgroundColor: '#F0F0F0',
+  gridContainer: {
+    width: '100%',
+    maxWidth: 600,
+    alignSelf: 'center',
   },
-  chatInfo: {
-    flex: 1,
-    marginLeft: 15,
-  },
-  chatHeader: {
+  grid: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
+    marginHorizontal: -6,
+  },
+  cardWrapper: {
+    width: '50%',
+    padding: 6,
+  },
+  card: {
+    width: '100%',
+    padding: 20,
+    borderRadius: 24,
+    gap: 12,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.08)',
     alignItems: 'center',
-    marginBottom: 4,
   },
-  name: {
-    fontSize: 17,
+  cardIcon: {
+    width: 40,
+    height: 40,
+    borderRadius: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  cardTitle: {
+    fontSize: 15,
     fontWeight: '800',
+    letterSpacing: -0.2,
   },
-  modelBadge: {
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    borderRadius: 4,
-    marginLeft: 8,
+  footer: {
+    padding: 24,
+    paddingTop: 0,
   },
-  modelText: {
-    fontSize: 9,
-    fontWeight: '900',
-    textTransform: 'uppercase',
+  footerLine: {
+    height: 1,
+    backgroundColor: 'rgba(255,255,255,0.05)',
+    marginBottom: 20,
   },
-  chatFooter: {
+  footerContent: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  preview: {
-    flex: 1,
-    fontSize: 14,
-    fontWeight: '400',
-    opacity: 0.7,
-  },
-  tokenText: {
-    fontSize: 9,
-    fontWeight: '700',
-    marginLeft: 8,
-  },
-  rightSide: {
-    alignItems: 'flex-end',
-    marginLeft: 10,
-  },
-  time: {
-    fontSize: 11,
-    fontWeight: '600',
-    marginBottom: 6,
-  },
-  badge: {
-    height: 18,
-    minWidth: 18,
-    borderRadius: 9,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 6,
-  },
-  badgeText: {
+  footerText: {
     fontSize: 10,
     fontWeight: '800',
+    letterSpacing: 1.5,
+    opacity: 0.5,
   },
-  fab: {
-    position: 'absolute',
-    bottom: Platform.OS === 'ios' ? 110 : 90,
-    right: 20,
-    width: 64,
-    height: 64,
-    borderRadius: 24,
-    justifyContent: 'center',
+  statusRow: {
+    flexDirection: 'row',
     alignItems: 'center',
-    elevation: 8,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.15,
-    shadowRadius: 10,
+    gap: 8,
+  },
+  statusDot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: '#4ADE80',
+  },
+  statusText: {
+    fontSize: 10,
+    fontWeight: '900',
+    letterSpacing: 1,
   },
 });

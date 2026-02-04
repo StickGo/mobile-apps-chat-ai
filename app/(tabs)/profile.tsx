@@ -7,6 +7,7 @@ import {
     LogOut,
     Moon,
     Shield,
+    Trash2,
     User
 } from 'lucide-react-native';
 import React from 'react';
@@ -30,9 +31,41 @@ const MENU_ITEMS = [
   { icon: Info, label: 'Help & Support' },
 ];
 
+import { clearAllConversations, getSystemPrompt, saveSystemPrompt } from '@/services/storage';
+import { Terminal } from 'lucide-react-native';
+import { Alert, TextInput } from 'react-native';
+
 export default function ProfileScreen() {
   const { mode, toggleTheme } = useAppTheme();
   const theme = Theme[mode];
+  const [systemPrompt, setSystemPrompt] = React.useState('');
+
+  React.useEffect(() => {
+    getSystemPrompt().then(p => setSystemPrompt(p || ''));
+  }, []);
+
+  const handlePromptChange = (val: string) => {
+    setSystemPrompt(val);
+    saveSystemPrompt(val);
+  };
+
+  const handleClearAll = () => {
+    Alert.alert(
+      'Clear All Conversations?',
+      'This will delete all chat history permanently. This action cannot be undone.',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Clear All',
+          style: 'destructive',
+          onPress: async () => {
+            await clearAllConversations();
+            Alert.alert('Success', 'All conversations have been cleared!');
+          }
+        }
+      ]
+    );
+  };
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
@@ -46,6 +79,8 @@ export default function ProfileScreen() {
         </View>
 
         <View style={styles.menuBox}>
+          <Text style={[styles.sectionTitle, { color: theme.secondaryText }]}>PREFERENCES</Text>
+          
           <View style={[styles.menuItem, { borderBottomColor: theme.secondaryBackground }]}>
             <View style={styles.rowLeft}>
               <View style={[styles.iconBox, { backgroundColor: theme.secondaryBackground }]}>
@@ -60,6 +95,31 @@ export default function ProfileScreen() {
               thumbColor={Platform.OS === 'ios' ? undefined : theme.background}
             />
           </View>
+
+          <View style={[styles.promptContainer, { borderBottomColor: theme.secondaryBackground, borderBottomWidth: 1, paddingVertical: 15 }]}>
+            <View style={styles.rowLeft}>
+              <View style={[styles.iconBox, { backgroundColor: theme.secondaryBackground }]}>
+                <Terminal size={20} color={theme.text} />
+              </View>
+              <Text style={[styles.menuLabel, { color: theme.text }]}>System Persona</Text>
+            </View>
+            <TextInput
+              style={[styles.promptInput, { color: theme.text, backgroundColor: theme.secondaryBackground }]}
+              placeholder="e.g. Speak like a pirate"
+              placeholderTextColor={theme.secondaryText}
+              multiline
+              value={systemPrompt}
+              onChangeText={handlePromptChange}
+            />
+          </View>
+
+          <TouchableOpacity 
+            style={[styles.clearButton, { backgroundColor: '#FF3B30', marginHorizontal: 20, marginVertical: 15 }]}
+            onPress={handleClearAll}
+          >
+            <Trash2 size={18} color="#FFFFFF" />
+            <Text style={[styles.clearButtonText, { color: '#FFFFFF' }]}>Clear All Conversations</Text>
+          </TouchableOpacity>
 
           {MENU_ITEMS.map((item, index) => (
             <TouchableOpacity 
@@ -156,5 +216,36 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '600',
     paddingBottom: 40,
+  },
+  sectionTitle: {
+    fontSize: 12,
+    fontWeight: '800',
+    marginBottom: 8,
+    marginTop: 10,
+    letterSpacing: 1,
+  },
+  promptContainer: {
+    marginBottom: 10,
+  },
+  promptInput: {
+    marginTop: 12,
+    borderRadius: 12,
+    padding: 12,
+    fontSize: 14,
+    fontWeight: '500',
+    minHeight: 80,
+    textAlignVertical: 'top',
+  },
+  clearButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 16,
+    borderRadius: 12,
+    gap: 8,
+  },
+  clearButtonText: {
+    fontSize: 16,
+    fontWeight: '700',
   },
 });
