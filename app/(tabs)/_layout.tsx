@@ -1,8 +1,7 @@
 import { Theme } from '@/constants/theme';
 import { useAppTheme } from '@/context/ThemeContext';
 import { Tabs } from 'expo-router';
-import { MessageSquare, User } from 'lucide-react-native';
-import React from 'react';
+import { Clock, MessageSquare, User } from 'lucide-react-native';
 import { Platform, StyleSheet, View } from 'react-native';
 
 export default function TabLayout() {
@@ -31,6 +30,17 @@ export default function TabLayout() {
           tabBarIcon: ({ color, focused }) => (
             <View style={styles.iconWrapper}>
               <MessageSquare size={24} color={color} strokeWidth={focused ? 2.5 : 2} />
+            </View>
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="history"
+        options={{
+          title: 'Archive',
+          tabBarIcon: ({ color, focused }) => (
+            <View style={styles.iconWrapper}>
+              <Clock size={24} color={color} strokeWidth={focused ? 2.5 : 2} />
             </View>
           ),
         }}

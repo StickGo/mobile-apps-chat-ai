@@ -57,73 +57,78 @@ export default function PremiumPortalScreen() {
       {/* Background Accent */}
       <View style={[styles.bgAccent, { backgroundColor: theme.text, opacity: 0.03 }]} />
 
-      <View style={styles.main}>
-        {/* Header Branding */}
-        <Animated.View entering={FadeIn.delay(100).duration(800)} style={styles.header}>
-            <View style={[styles.logoBox, { backgroundColor: theme.text }]}>
-                <Zap size={18} color={theme.background} fill={theme.background} />
-            </View>
-            <Text style={[styles.nexusText, { color: theme.text }]}>Nexus Core</Text>
-        </Animated.View>
+      <ScrollView 
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.scrollContent}
+      >
+        <View style={styles.main}>
+          {/* Header Branding */}
+          <Animated.View entering={FadeIn.delay(100).duration(800)} style={styles.header}>
+              <View style={[styles.logoBox, { backgroundColor: theme.text }]}>
+                  <Zap size={18} color={theme.background} fill={theme.background} />
+              </View>
+              <Text style={[styles.nexusText, { color: theme.text }]}>Nexus Core</Text>
+          </Animated.View>
 
-        {/* Hero Greeting */}
-        <View style={styles.hero}>
-          <Animated.Text 
-            entering={FadeInDown.delay(300).duration(800)} 
-            style={[styles.greeting, { color: theme.text }]}
-          >
-            How can I enhance{'\n'}your intelligence?
-          </Animated.Text>
-          <Animated.Text 
-            entering={FadeInDown.delay(400).duration(800)} 
-            style={[styles.subGreeting, { color: theme.secondaryText }]}
-          >
-            Integrated with Vanguard Core 2.5 Stable Flash
-          </Animated.Text>
-        </View>
-
-        {/* Primary Input Action */}
-        <Animated.View 
-          entering={FadeInDown.delay(500).duration(800)}
-          layout={Layout.springify()}
-          style={styles.inputWrapper}
-        >
-            <TouchableOpacity 
-              activeOpacity={0.9} 
-              onPress={() => startNewChat()}
-              style={[styles.inputButton, { backgroundColor: theme.secondaryBackground }]}
+          {/* Hero Greeting */}
+          <View style={styles.hero}>
+            <Animated.Text 
+              entering={FadeInDown.delay(300).duration(800)} 
+              style={[styles.greeting, { color: theme.text }]}
             >
-                <MessageSquare size={20} color={theme.secondaryText} />
-                <Text style={[styles.inputText, { color: theme.secondaryText }]}>Ask anything to Vanguard...</Text>
-                <View style={[styles.sendIcon, { backgroundColor: theme.text }]}>
-                    <ArrowRight size={16} color={theme.background} />
-                </View>
-            </TouchableOpacity>
-        </Animated.View>
+              How can I enhance{'\n'}your intelligence?
+            </Animated.Text>
+            <Animated.Text 
+              entering={FadeInDown.delay(400).duration(800)} 
+              style={[styles.subGreeting, { color: theme.secondaryText }]}
+            >
+              Integrated with Vanguard Core 2.5 Stable Flash
+            </Animated.Text>
+          </View>
 
-        {/* Suggestion Chips Grid */}
-        <View style={styles.gridContainer}>
-          <View style={styles.grid}>
-            {SUGGESTIONS.map((item, index) => (
-              <Animated.View 
-                key={item.title} 
-                entering={FadeInDown.delay(600 + index * 100).duration(800)}
-                style={styles.cardWrapper}
+          {/* Primary Input Action */}
+          <Animated.View 
+            entering={FadeInDown.delay(500).duration(800)}
+            layout={Layout.springify()}
+            style={styles.inputWrapper}
+          >
+              <TouchableOpacity 
+                activeOpacity={0.9} 
+                onPress={() => startNewChat()}
+                style={[styles.inputButton, { backgroundColor: theme.secondaryBackground }]}
               >
-                <TouchableOpacity 
-                  style={[styles.card, { backgroundColor: theme.secondaryBackground }]}
-                  onPress={() => startNewChat(item.title)}
-                >
-                  <View style={[styles.cardIcon, { backgroundColor: `${item.color}20` }]}>
-                      <item.icon size={20} color={item.color} />
+                  <MessageSquare size={20} color={theme.secondaryText} />
+                  <Text style={[styles.inputText, { color: theme.secondaryText }]}>Ask anything to Vanguard...</Text>
+                  <View style={[styles.sendIcon, { backgroundColor: theme.text }]}>
+                      <ArrowRight size={16} color={theme.background} />
                   </View>
-                  <Text style={[styles.cardTitle, { color: theme.text }]} numberOfLines={1}>{item.title}</Text>
-                </TouchableOpacity>
-              </Animated.View>
-            ))}
+              </TouchableOpacity>
+          </Animated.View>
+
+          {/* Suggestion Chips Grid */}
+          <View style={styles.gridContainer}>
+            <View style={styles.grid}>
+              {SUGGESTIONS.map((item, index) => (
+                <Animated.View 
+                  key={item.title} 
+                  entering={FadeInDown.delay(600 + index * 100).duration(800)}
+                  style={styles.cardWrapper}
+                >
+                  <TouchableOpacity 
+                    style={[styles.card, { backgroundColor: theme.secondaryBackground }]}
+                    onPress={() => startNewChat(item.title)}
+                  >
+                    <View style={[styles.cardIcon, { backgroundColor: `${item.color}20` }]}>
+                        <item.icon size={20} color={item.color} />
+                    </View>
+                    <Text style={[styles.cardTitle, { color: theme.text }]} numberOfLines={1}>{item.title}</Text>
+                  </TouchableOpacity>
+                </Animated.View>
+              ))}
+            </View>
           </View>
         </View>
-      </View>
+      </ScrollView>
 
       {/* Aesthetic Footer */}
       <View style={styles.footer}>
@@ -153,9 +158,12 @@ const styles = StyleSheet.create({
     borderRadius: width * 0.75,
   },
   main: {
-    flex: 1,
     paddingHorizontal: 24,
     paddingTop: 20,
+    paddingBottom: 20,
+  },
+  scrollContent: {
+    flexGrow: 1,
   },
   header: {
     flexDirection: 'row',
@@ -177,7 +185,7 @@ const styles = StyleSheet.create({
   },
   hero: {
     marginBottom: 40,
-    alignItems: 'center',
+    alignItems: 'flex-start',
   },
   greeting: {
     fontSize: 34,
@@ -185,13 +193,13 @@ const styles = StyleSheet.create({
     letterSpacing: -1,
     lineHeight: 42,
     marginBottom: 12,
-    textAlign: 'center',
+    textAlign: 'left',
   },
   subGreeting: {
     fontSize: 14,
     fontWeight: '600',
     opacity: 0.8,
-    textAlign: 'center',
+    textAlign: 'left',
   },
   inputWrapper: {
     width: '100%',
